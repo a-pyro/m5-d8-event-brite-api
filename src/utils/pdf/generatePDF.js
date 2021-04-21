@@ -33,7 +33,7 @@ const generatePDF = async (data) => {
       ],
     };
     const pdfSourceStream = printer.createPdfKitDocument(docDefinition);
-
+    //& return stream
     const pdfPath = join(
       dirname(fileURLToPath(import.meta.url)),
       `../../data/pdf/${data._id}.pdf`

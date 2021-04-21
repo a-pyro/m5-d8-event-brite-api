@@ -2,7 +2,7 @@ import sgMail from '@sendgrid/mail';
 import fs from 'fs-extra';
 import { fileURLToPath } from 'url';
 import { join, dirname } from 'path';
-import { throws } from 'assert';
+
 const { readFile } = fs;
 
 export const sendEmail = async (toEmail, fileName) => {

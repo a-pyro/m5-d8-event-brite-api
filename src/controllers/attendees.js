@@ -12,7 +12,7 @@ export const addAttendeeHandler = async (req, res, next) => {
     const attendees = await fetchAttendees();
     const newAttendee = { ...req.body, createdAt: new Date(), _id: uuidv4() };
     attendees.push(newAttendee);
-    console.log(`${newAttendee._id}.pdf`);
+    // console.log(`${newAttendee._id}.pdf`);
     await generatePDF(newAttendee);
     await writeAttendees(attendees);
     await sendEmail(newAttendee.email, `${newAttendee._id}.pdf`);
