@@ -2,27 +2,32 @@ import sgMail from '@sendgrid/mail';
 import fs from 'fs-extra';
 import { fileURLToPath } from 'url';
 import { join, dirname } from 'path';
+import { streamToString } from '../pdf/streamToString.js';
+import generatePDF from '../pdf/generatePDF.js';
 
 const { readFile } = fs;
 
-export const sendEmail = async (toEmail, fileName) => {
+export const sendEmail = async (user) => {
   try {
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-    const pathToAttachment = join(
-      dirname(fileURLToPath(import.meta.url)),
-      `../../data/pdf/${fileName}`
-    );
-    const attachment = await readFile(pathToAttachment);
-    const convertedAttach = attachment.toString('base64');
-    console.log(pathToAttachment);
+    // const pathToAttachment = join(
+    //   dirname(fileURLToPath(import.meta.url)),
+    //   `../../data/pdf/${fileName}`
+    // );
+    const pdfStreamSource = await generatePDF(user);
+    const attachment = await streamToString(pdfStreamSource);
+
+    // const attachment = await readFile(pathToAttachment);
+    // const convertedAttach = attachment.toString('base64');
+    // console.log(pathToAttachment);
     const msg = {
-      to: toEmail,
+      to: user.email,
       from: 'a.germenji@outlook.com',
       subject: 'Booking Confirmation',
       text: 'Congrats, you successfully booked this event, heres your ticket',
       attachments: [
         {
-          content: convertedAttach,
+          content: attachment,
           filename: 'booking.pdf',
           type: 'application/pdf',
           disposition: 'attachment',

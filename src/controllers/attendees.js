@@ -28,9 +28,9 @@ export const addAttendeeHandler = async (req, res, next) => {
       // console.log(`${newAttendee._id}.pdf`);
       attendees.push(newAttendee);
 
-      await generatePDF(newAttendee);
+      // await generatePDF(newAttendee);
       await writeAttendees(attendees);
-      await sendEmail(newAttendee.email, `${newAttendee._id}.pdf`);
+      await sendEmail(newAttendee);
       res.send({ success: true, _id: newAttendee._id });
     }
   } catch (error) {
