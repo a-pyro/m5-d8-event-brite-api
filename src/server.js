@@ -7,7 +7,7 @@ import {
   errorHandler,
   routeNotFoundHandler,
 } from './middlewares/errors/errorHandling.js';
-import ErrorResponse from './utils/errorResponse.js';
+import ErrorResponse from './utils/errors/errorResponse.js';
 
 const app = express();
 

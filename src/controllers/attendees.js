@@ -1,7 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
-import ErrorResponse from '../utils/errorResponse.js';
-import { fetchAttendees, writeAttendees } from '../utils/fsUtils.js';
+import ErrorResponse from '../utils/errors/errorResponse.js';
+import { fetchAttendees, writeAttendees } from '../utils/fs/fsUtils.js';
 import { sendEmail } from '../utils/email/email.js';
+import generatePdf from '../utils/pdf/generatePDF.js';
 // @desc    add attendee
 // @route   POST /attendees
 
@@ -14,6 +15,7 @@ export const addAttendeeHandler = async (req, res, next) => {
     await sendEmail(newAttendee.email);
     res.send({ success: true, _id: newAttendee._id });
   } catch (error) {
+    console.log('error in addAttendee');
     next(error);
   }
 };
@@ -22,7 +24,15 @@ export const addAttendeeHandler = async (req, res, next) => {
 // @route   POST /attendees/:id/createPDF
 export const createPdfHandler = async (req, res, next) => {
   try {
-    res.send({ mess: 'hello' });
+    const attendees = await fetchAttendees();
+
+    const atteendee = attendees.find((att) => att._id === req.params.id);
+    if (atteendee) {
+      await generatePdf(atteendee);
+      res.send({ mess: 'fatto!' });
+    } else {
+      next(new ErrorResponse('Atteendee not found', 404));
+    }
   } catch (error) {
     next(error);
   }

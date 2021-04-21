@@ -1,0 +1,20 @@
+[
+  {
+    "firstName": "Ardi",
+    "lastName": "Germenji",
+    "email": "ardi.germenji@gmail.com",
+    "arrivalTime": "2021-04-26T12:19:35"
+  },
+  {
+    "firstName": "Sempre Ardi",
+    "lastName": "Germenji",
+    "email": "a.germenji@icloud.com",
+    "arrivalTime": "2021-04-26T12:19:35"
+  },
+  {
+    "firstName": "Ancora Ardi",
+    "lastName": "Germenji",
+    "email": "a.germenji@outlook.com",
+    "arrivalTime": "2021-04-26T12:19:35"
+  }
+]

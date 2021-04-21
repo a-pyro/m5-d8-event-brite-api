@@ -4,7 +4,7 @@ import { dirname, join } from 'path';
 
 const { readJSON, writeJSON, writeFile } = fs;
 
-const allData = join(dirname(fileURLToPath(import.meta.url)), '../data');
+const allData = join(dirname(fileURLToPath(import.meta.url)), '../../data');
 
 const productsFiles = join(
   dirname(fileURLToPath(import.meta.url)),
