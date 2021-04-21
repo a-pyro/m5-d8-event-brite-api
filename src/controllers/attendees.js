@@ -11,12 +11,28 @@ export const addAttendeeHandler = async (req, res, next) => {
   try {
     const attendees = await fetchAttendees();
     const newAttendee = { ...req.body, createdAt: new Date(), _id: uuidv4() };
-    attendees.push(newAttendee);
-    // console.log(`${newAttendee._id}.pdf`);
-    await generatePDF(newAttendee);
-    await writeAttendees(attendees);
-    await sendEmail(newAttendee.email, `${newAttendee._id}.pdf`);
-    res.send({ success: true, _id: newAttendee._id });
+    const userAlreadyBooked = attendees.findIndex(
+      (us) => us.email === newAttendee.email
+    );
+    console.log(userAlreadyBooked);
+    if (userAlreadyBooked !== -1) {
+      console.log('user already booked!');
+      res.status(400).send({
+        success: false,
+        message: `User already booked, please use the link below to download the ticket`,
+        link: `${req.protocol}://${req.get('host')}/attendees/${
+          attendees[userAlreadyBooked]._id
+        }/tickets`,
+      });
+    } else {
+      // console.log(`${newAttendee._id}.pdf`);
+      attendees.push(newAttendee);
+
+      await generatePDF(newAttendee);
+      await writeAttendees(attendees);
+      await sendEmail(newAttendee.email, `${newAttendee._id}.pdf`);
+      res.send({ success: true, _id: newAttendee._id });
+    }
   } catch (error) {
     console.log('error in addAttendee');
     next(error);
