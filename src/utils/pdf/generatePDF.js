@@ -6,7 +6,8 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 const { createWriteStream } = fs;
 
-const asyncPipeline = promisify(pipeline);
+export const asyncPipeline = promisify(pipeline);
+
 const generatePDF = async (data) => {
   try {
     const fonts = {
@@ -34,13 +35,15 @@ const generatePDF = async (data) => {
     };
     const pdfSourceStream = printer.createPdfKitDocument(docDefinition);
     //& return stream
-    const pdfPath = join(
-      dirname(fileURLToPath(import.meta.url)),
-      `../../data/pdf/${data._id}.pdf`
-    );
 
+    // const pdfPath = join(
+    //   dirname(fileURLToPath(import.meta.url)),
+    //   `../../data/pdf/${data._id}.pdf`
+    // );
     pdfSourceStream.end();
-    await asyncPipeline(pdfSourceStream, createWriteStream(pdfPath));
+    return pdfSourceStream;
+
+    // await asyncPipeline(pdfSourceStream, createWriteStream(pdfPath));
   } catch (error) {
     console.log('genera pdf errore: ', error);
     throw new Error('Errore durante la creazione del PDF');

@@ -3,7 +3,7 @@ import ErrorResponse from '../utils/errors/errorResponse.js';
 import { fetchAttendees, writeAttendees } from '../utils/fs/fsUtils.js';
 import { sendEmail } from '../utils/email/email.js';
 
-import generatePDF from '../utils/pdf/generatePDF.js';
+import generatePDF, { asyncPipeline } from '../utils/pdf/generatePDF.js';
 // @desc    add attendee
 // @route   POST /attendees
 
@@ -35,6 +35,28 @@ export const addAttendeeHandler = async (req, res, next) => {
     }
   } catch (error) {
     console.log('error in addAttendee');
+    next(error);
+  }
+};
+
+// @desc    generate pdf and send stream to download
+// @route   GET /attendees/:id/tickets
+export const dowloadTicketHandler = async (req, res, next) => {
+  try {
+    const attendees = await fetchAttendees();
+    const atteendee = attendees.find((att) => att._id === req.params.id);
+    if (atteendee) {
+      const sourceStream = await generatePDF(atteendee);
+      res.set({
+        'Content-Type': 'application/pdf',
+      });
+      res.attachment(req.params.id);
+      await asyncPipeline(sourceStream, res);
+      // res.send({ mess: 'fatto!' });
+    } else {
+      next(new ErrorResponse('Atteendee not found', 404));
+    }
+  } catch (error) {
     next(error);
   }
 };
