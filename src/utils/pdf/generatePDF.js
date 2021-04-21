@@ -27,6 +27,7 @@ const generatePDF = async (data) => {
             `last name: ${data.lastName}`,
             `email: ${data.email}`,
             `arrival time: ${data.arrivalTime}`,
+            `booking id: ${data._id}`,
           ],
         },
       ],
@@ -35,9 +36,9 @@ const generatePDF = async (data) => {
 
     const pdfPath = join(
       dirname(fileURLToPath(import.meta.url)),
-      `../../data/pdf/${data._id}`
+      `../../data/pdf/${data._id}.pdf`
     );
-    console.log(pdfPath);
+
     pdfSourceStream.end();
     await asyncPipeline(pdfSourceStream, createWriteStream(pdfPath));
   } catch (error) {
