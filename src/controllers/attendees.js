@@ -60,21 +60,3 @@ export const dowloadTicketHandler = async (req, res, next) => {
     next(error);
   }
 };
-
-// @desc    generate pdf and save to disk with attendee data
-// @route   POST /attendees/:id/createPDF
-export const createPdfHandler = async (req, res, next) => {
-  try {
-    const attendees = await fetchAttendees();
-
-    const atteendee = attendees.find((att) => att._id === req.params.id);
-    if (atteendee) {
-      await generatePDF(atteendee);
-      res.send({ mess: 'fatto!' });
-    } else {
-      next(new ErrorResponse('Atteendee not found', 404));
-    }
-  } catch (error) {
-    next(error);
-  }
-};
