@@ -1,19 +1,18 @@
 import { v4 as uuidv4 } from 'uuid';
 import ErrorResponse from '../utils/errorResponse.js';
-import {
-  fetchProducts,
-  fetchReviews,
-  writeProducts,
-  writeProductsPics,
-} from '../utils/fsUtils.js';
-import { extname } from 'path';
-
+import { fetchAttendees, writeAttendees } from '../utils/fsUtils.js';
+import { sendEmail } from '../utils/email/email.js';
 // @desc    add attendee
 // @route   POST /attendees
 
 export const addAttendeeHandler = async (req, res, next) => {
   try {
-    res.send({ mess: 'hi' });
+    const attendees = await fetchAttendees();
+    const newAttendee = { ...req.body, createdAt: new Date(), _id: uuidv4() };
+    attendees.push(newAttendee);
+    await writeAttendees(attendees);
+    await sendEmail(newAttendee.email);
+    res.send({ success: true, _id: newAttendee._id });
   } catch (error) {
     next(error);
   }
