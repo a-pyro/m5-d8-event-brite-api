@@ -22,7 +22,7 @@ export const sendEmail = async (user) => {
     // console.log(pathToAttachment);
     const msg = {
       to: user.email,
-      from: 'a.germenji@outlook.com',
+      from: `${process.env.EMAIL}`,
       subject: 'Booking Confirmation',
       text: 'Congrats, you successfully booked this event, heres your ticket',
       attachments: [
